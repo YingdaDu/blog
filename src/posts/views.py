@@ -1,6 +1,7 @@
 from urllib import quote_plus
 
 from django.contrib import messages
+from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render, get_object_or_404, redirect
@@ -37,7 +38,17 @@ def post_detail(request, slug=None):
 
 def post_list(request):
 	queryset_list = Post.objects.all() #.order_by("-timestamp")
-	paginator = Paginator(queryset_list, 10) # Show 25 contacts per page
+	user = request.user
+	query = request.GET.get("q")
+	if query:
+		queryset_list = queryset_list.filter(
+				Q(title__icontains=query)|
+				Q(content__icontains=query)|
+				Q(user__first_name__icontains=query) |
+				Q(user__last_name__icontains=query)
+				).distinct()
+		
+	paginator = Paginator(queryset_list, 8) # Show 25 contacts per page
 	page_request_var = "page"
 	page = request.GET.get(page_request_var)
 	try:
@@ -52,7 +63,8 @@ def post_list(request):
 
 	context = {
 		"object_list": queryset, 
-		"title": "List",
+		"user": user,
+		"title": "Blog List",
 		"page_request_var": page_request_var
 	}
 	return render(request, "post_list.html", context)

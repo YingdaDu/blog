@@ -2,29 +2,50 @@
 <!--DOCTYPE html -->
 <html>
 <head>
-<title>{% block head_title %}Try Django 1.9{% endblock head_title %}</title>
+<title>{% block head_title %}blog{% endblock head_title %}</title>
 <!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
 
 <!-- Optional theme -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" >
 
 
-<link rel='stylesheet' href='{% static "css/base.css" %}' />
+<!-- <link rel='stylesheet' src ='./static/css/base.css" %}' /> -->
 <style>
-{% block style %}{% endblock style %}
+ h1 {
+ 	color: #E74C3C ;
+ 	text-align: center;
+ 	font-family: "Brush Script MT", cursive;
+ 	font-size: 70px;
+ }
+ .title {
+ 	color: #E74C3C ;
+ 	text-align: center;
+ 	font-family: "Brush Script MT", cursive;
+ 	font-size: 20px;
+ }
+ .navbarstyle {
+ 	color: #E74C3C ;
+ 	font-size: 20px;
+ 	font-family: "Brush Script MT", cursive;
+ }
 </style>
 </head>
 <body>
-{% include "messages_display.html" %}
-<div class='container'>
-{% block content %}{% endblock content %}
+     {% include "navbar.html" %}
+<div class="container-fluid">
+	 {% block content %}
+	 {% endblock content %}
 </div>
 
 
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous"></script>
+ 
 
 <!-- Latest compiled and minified JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 </body>
 </html>
 
