@@ -1,13 +1,23 @@
 from __future__ import unicode_literals
 
 from django.conf import settings
+from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
 from django.db import models
+from django.utils import timezone
+
 from django.db.models.signals import pre_save
 
 from django.utils.text import slugify
+from comments.models import Comment
 # Create your models here.
 # MVC MODEL VIEW CONTROLLER
+
+class PostManager(models.Manager):
+    def active(self, *args, **kwargs):
+        # Post.objects.all() = super(PostManager, self).all()
+        return super(PostManager, self).filter(draft=False).filter(publish__lte=timezone.now())
+
 
 
 def upload_location(instance, filename):
@@ -30,6 +40,8 @@ class Post(models.Model):
     updated = models.DateTimeField(auto_now=True, auto_now_add=False)
     timestamp = models.DateTimeField(auto_now=False, auto_now_add=True)
 
+    objects = PostManager()
+
     def __unicode__(self):
         return self.title
 
@@ -41,6 +53,18 @@ class Post(models.Model):
 
     class Meta:
         ordering = ["-timestamp", "-updated"]
+
+    @property
+    def comments(self):
+        instance = self
+        qs = Comment.objects.filter_by_instance(instance)
+        return qs
+
+    @property
+    def get_content_type(self):
+        instance = self
+        content_type = ContentType.objects.get_for_model(instance.__class__)
+        return content_type
 
 
 

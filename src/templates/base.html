@@ -29,6 +29,18 @@
  	font-size: 20px;
  	font-family: "Brush Script MT", cursive;
  }
+ .myfieldclass {
+ 	height: 70px;
+ 	width: 100%;
+ }
+ .comment_btn {
+ 	margin-top: 0.2cm;
+ 	float: right;
+ }
+ 
+.comment-reply{
+    display:none;
+}
 </style>
 </head>
 <body>
@@ -46,6 +58,13 @@
 
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+<script type="text/javascript">
+    $(".comment-reply-btn").click(function(event){
+        event.preventDefault();
+        $(this).parent().next(".comment-reply").fadeToggle();
+    })
+</script>
 </body>
 </html>
 
