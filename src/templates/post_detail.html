@@ -9,14 +9,14 @@
 
 {% block content %}
 <div class='col-sm-6 col-sm-offset-3'>
-    <h1>{{ title }}</h1>
+   <div class='col-sm-3'>
+    <h3>{{ title }}</h3>
+    <p>by {{ user }}</p>
+   </div>
     {% if instance.image %}
     <img src='{{ instance.image.url }}' class='img-responsive' />
     {% endif %}
     <p>{{ instance.timestamp }}</p>
-
-
-
 
 
 <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}">

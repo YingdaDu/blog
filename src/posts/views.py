@@ -12,8 +12,8 @@ from .forms import PostForm
 from .models import Post
 
 def post_create(request):
-	if not request.user.is_staff or not request.user.is_superuser:
-		raise Http404
+	if not request.user.is_active:
+		return redirect("/login")
 		
 	form = PostForm(request.POST or None, request.FILES or None)
 	if form.is_valid():
@@ -65,6 +65,7 @@ def post_detail(request, slug=None):
 	comments = instance.comments
 	context = {
 		"title": instance.title,
+		"user": instance.user,
 		"instance": instance,
 		"share_string": share_string,
 		"comments": comments,
