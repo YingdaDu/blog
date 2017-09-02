@@ -5,6 +5,7 @@
 <title>{% block head_title %}blog{% endblock head_title %}</title>
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" >
 
 <!-- Optional theme -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" >
@@ -22,7 +23,7 @@
  	color: #E74C3C ;
  	text-align: center;
  	font-family: "Brush Script MT", cursive;
- 	font-size: 20px;
+ 	font-size: 30px;
  }
  .navbarstyle {
  	color: #E74C3C ;
@@ -32,15 +33,80 @@
  .myfieldclass {
  	height: 70px;
  	width: 100%;
+  font-size: 16px;
+
  }
  .comment_btn {
  	margin-top: 0.2cm;
  	float: right;
  }
- 
+.view_link {
+  padding: 0px 0% 0px 0px;
+  color: #E74C3C;
+  font-size: 1vw;
+  font-family: "Arial Black", "Arial Bold", Gadget, sans-serif;
+}
+.view_btn {
+  background-color: #E74C3C ;
+  border-color: #E74C3C;
+}
+.auther {
+  font-size: 2vw;
+  font-family: "Brush Script MT", cursive;
+}
 .comment-reply{
     display:none;
 }
+.nav-offset{
+  padding: 10px 0px 0px 0px;
+}
+.nav-blog {
+  padding: 0px 0px 0px 20px;
+}
+.blog-like {
+  color: lightgrey;
+  padding-left: 20px;
+  font-size: 18px;
+}
+.blog-liked {
+  padding-top: 150px;
+  color: lightgrey;
+  padding-left: 0px;
+  font-size: 18px;
+}
+.blog-unlike {
+  padding-top: 150px;
+  color: #E74C3C;
+  padding-left: 0px;
+  font-size: 18px;
+}
+
+.comment-text {
+  color: lightgrey;
+  padding-left: 20px;
+  font-size: 18px;
+}
+.comment-texted {
+  color: lightgrey;
+  padding-left: 0px;
+  font-size: 18px;
+}
+.icons {
+  color: lightgrey;
+}
+.imagelist {
+  padding: 0px 0px 0px 0px;
+}
+.load {
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+/*#load {
+    margin: 0; 
+    
+}*/
+
 </style>
 </head>
 <body>
@@ -51,20 +117,111 @@
 </div>
 
 
+
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"
   integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
   crossorigin="anonymous"></script>
  
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 
-<script type="text/javascript">
-    $(".comment-reply-btn").click(function(event){
-        event.preventDefault();
-        $(this).parent().next(".comment-reply").fadeToggle();
-    })
+{% block script %}
+
+<script>
+
+    
+
+    function getParameterByName(name, url) {
+        if (!url) {
+          url = window.location.href;
+        }
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));  
+    }
+    
+    $(document).ready(function(){
+        var query = getParameterByName('q');
+        var follow = getParameterByName('f');
+        var nextUrl;
+        var blogList = [];
+        function parsePosts(){
+            if (blogList == 0) {
+                $("#blog-container").text("No posts currently found.")
+            } else {
+
+             twoList = [];
+             while(blogList.length)  twoList.push(blogList.splice(0,4));
+
+             for (var i = 0; i < twoList.length; i++) {
+                $("#blog-container").append("<div class=\"row\">")
+                $.each(twoList[i], function(key, value){
+                    var blogKey = key;
+                    var content = value.content;
+                    var user = value.user.username;
+                    var userUrl = value.user.url;
+                    var objUrl = value.url;
+                    var image = value.image;
+                    var title = value.title;
+                    var likes = value.likes;
+                    var comments = value.comments;
+                    $("#blog-container").append(
+                        "<div class=\"col-sm-3\"><div class=\"thumbnail\"><a href=\"" + objUrl + "\" >" + "<img src=\"" + image + "\"class=\"img-thumbnail\" style=\"width:100%;height:40%;\"/></a>" + "<div class=\"caption\">" + "<span><a href='"+ objUrl + "' class= \"view_link\">"+ title + "</a><span class=\"glyphicon glyphicon-heart blog-like\">"+likes+"</span><a href=\"#\"><span class=\"glyphicon glyphicon-comment comment-text\">"+ comments +"</span></a><span></div></div></div>"
+                    )
+                    
+                })
+            }
+        }
+        
+    }
+
+        function fetchBlogs(url){
+              //  console.log("fetching..")
+               var fetchurl;
+               if (!url ){
+                  fetchurl = "/api/post/"
+               } else {
+                  fetchurl = url
+               }
+                $.ajax({
+                  url: fetchurl,
+                  data: {
+                    "q": query,
+                    "f": follow,
+                  },
+                  method: "GET",
+                  success: function(data){
+                    blogList = data.results
+                    nextUrl = data.next
+                    parsePosts()
+                   
+                  },
+                  error: function(data){
+                    console.log(data)
+                  }
+                })
+        }
+        fetchBlogs()
+
+        $("#loadmore").click(function(e){
+             e.preventDefault();  
+             if (nextUrl) {
+                fetchBlogs(nextUrl)
+             }
+        })
+
+
+
+})
+
+
+
 </script>
+{% endblock script %}
 </body>
 </html>
 

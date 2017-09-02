@@ -17,27 +17,18 @@ from django.conf import settings
 from django.conf.urls import include, url
 from django.conf.urls.static import static
 from django.contrib import admin
-from posts.views import (
-    post_list,
-    post_create,
-    post_detail,
-    post_update,
-    post_delete,
-)
-from accounts.views import (login_view, register_view, logout_view)
+# from accounts.views import (login_view, register_view, logout_view)
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^posts/', include("posts.urls", namespace='posts')),
-    url(r'^login/', login_view, name='login'),
-    url(r'^logout/', logout_view, name='logout'),
-    url(r'^register/', register_view, name='register'),
-    #url(r'^posts/$', "<appname>.views.<function_name>"),
-    url(r'^$', post_list, name='list'),
-    url(r'^create/$', post_create),
-    url(r'^(?P<slug>[\w-]+)/$', post_detail, name='detail'),
-    url(r'^(?P<slug>[\w-]+)/edit/$', post_update, name='update'),
-    url(r'^(?P<slug>[\w-]+)/delete/$', post_delete),
+    url(r'^', include("accounts.urls", namespace='profiles')),
+    url(r'^api/post/', include('posts.api.urls', namespace='post-api')),
+    # url(r'^login/', login_view, name='login'),
+    # url(r'^logout/', logout_view, name='logout'),
+    # url(r'^register/', register_view, name='register'),
+
+   
 ]
 
 if settings.DEBUG:

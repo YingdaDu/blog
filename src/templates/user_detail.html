@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div class="row">
+       <div class = "col-sm-2">
+                <div class="thumbnail">
+                    <div class ="title">{{ object }}</div>
+                    <p>Followers: {{ object.followed_by.all.count }}</p>
+                    <p>
+                     <a class='btn btn-link' href='{{ object.profile.get_follow_url }}'>
+                        {% if following %}Unfollow{% else %}Follow{% endif %}
+                     </a>
+                    </p>
+                    <h4>Following <small>{{ object.profile.get_following.count }}</small></h4>
+
+                     {% for user in object.profile.get_following %}
+                     <a href='/{{ user.username }}'>{{ user.username }}</a><br/>
+                     {% empty %}
+                     <h4>Not following any users</h4>
+                     {% endfor %}
+
+                  <hr/>
+                  <h4>Followed By</h4>
+                     {% for profile in object.followed_by.all %}
+                     <a href='/{{ profile.user.username }}'>{{ profile.user.username }}</a><br/>
+                     {% empty %}
+                     <h4>Not followed by any users</h4>
+                     {% endfor %}
+                </div>
+        </div>
+        <div class = "col-md-10">
+            <div class="row">
+            {% for obj in object.post_set.all %}
+             <div class="col-sm-4">
+                <div class="thumbnail">
+                    {% if obj.image %}
+                    <a href='{{ obj.get_absolute_url }}'> <img src='{{ obj.image.url }}' class='img-thumbnail' style="width:100%;height:40%;"/></a>
+                    {% endif %}
+                    <div class="caption">
+                    <h3><a href='{{ obj.get_absolute_url }}'>{{ obj.title }}</a> <small>{{ obj.timestamp|timesince }} ago</small></h3>
+                    {% if obj.user.get_full_name %}<p>Author: {{ obj.user.get_full_name }}</p>{% endif %}
+                    {% if isCurrentUser %}
+                        <p><a href="{{ obj.get_update_url }}" class="btn btn-primary" role="button">Edit</a>
+                        <a href="{{ obj.get_delete_url }}" class="btn btn-primary" role="button">Delete</a></p>
+                    {% endif %}
+                  </div>
+                </div>
+            </div>
+            {% endfor %}
+           </div>
+        </div>
+        <hr/>
+      
+    </div>
+
+
+
+{% endblock content %}

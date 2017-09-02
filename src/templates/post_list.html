@@ -1,63 +1,28 @@
 {% extends "base.html" %}
+
+
+
 {% block content %}
 
-    <div class="row">
-       <div class = "col-sm-2">
-                <div class="thumbnail">
-                    <div class ="title">{{ user }}</div>
-                    <p><a href="./create" class="btn btn-primary" role="button">Create</a></p>
-                </div>
-        </div>
-        <div class = "col-md-10">
+
+
+        <div class = "col-md-12">
             <h1>{{ title }}</h1>
-            <form method='GET' action='' class='row'>
-                <div class='col-sm-6 col-sm-offset-3'>
-                    <div class='input-group'>
-                        <input class='form-control' type='text' name='q' placeholder='Search posts' value='{{ request.GET.q }}'/>
-                        <span class='input-group-btn'>
-                            <!-- <input class='btn btn-default' type='submit' value='Search' /> -->
-                            <button class='btn btn-default' type='submit'>Search <i class="fa fa-search"></i></button>
-                        </span>
-                    </div>
-                </div>
-            </form>
-            <div class="row">
-            {% for obj in object_list %}
-             <div class="col-sm-4">
-                <div class="thumbnail">
-                    {% if obj.image %}
-                     <img src='{{ obj.image.url }}' class='img-thumbnail' />
-                    {% endif %}
-                    <div class="caption">
-                    <h3><a href='{{ obj.get_absolute_url }}'>{{ obj.title }}</a> <small>{{ obj.timestamp|timesince }} ago</small></h3>
-                    {% if obj.user.get_full_name %}<p>Author: {{ obj.user.get_full_name }}</p>{% endif %}
-                    <p>{{ obj.content|linebreaks|truncatechars:120 }}</p>
-                    <p><a href="{{ obj.get_absolute_url }}" class="btn btn-primary" role="button">View</a></p>
-                  </div>
-                </div>
-            </div>
-            {% endfor %}
-           </div>
+             <div id='blog-container'>
+          </div>
+    
         </div>
         <hr/>
-        <div class="col-md-4 col-md-offset-6">
-            <div class="pagination">
-                <span class="step-links">
-                    {% if object_list.has_previous %}
-                        <a href="?{{ page_request_var }}={{ object_list.previous_page_number }}">previous</a>
-                    {% endif %}
+        <div class = "col-md-4 col-md-offset-4">
+            <div class="pagination load">
 
-                    <span class="current">
-                        Page {{ object_list.number }} of {{ object_list.paginator.num_pages }}.
-                    </span>
+                <p><a href="#" id ='loadmore' class="btn btn-primary">Load More</a></p>
 
-                    {% if object_list.has_next %}
-                        <a href="?{{ page_request_var }}={{ object_list.next_page_number }}">next</a>
-                    {% endif %}
-                </span>
             </div>
         </div>
-    </div>
+
+
+
 
 
 

@@ -18,11 +18,18 @@ class PostManager(models.Manager):
         # Post.objects.all() = super(PostManager, self).all()
         return super(PostManager, self).filter(draft=False).filter(publish__lte=timezone.now())
 
+    def like_toggle(self, user, post_obj):
+        if user in post_obj.liked.all():
+            is_liked = False
+            post_obj.liked.remove(user)
+        else:
+            is_liked = True
+            post_obj.liked.add(user)
+            #print(post_obj.liked.all())
+        return is_liked
 
 
 def upload_location(instance, filename):
-    #filebase, extension = filename.split(".")
-    #return "%s/%s.%s" %(instance.id, instance.id, extension)
     return "%s/%s" %(instance.id, filename)
 
 class Post(models.Model):
@@ -32,11 +39,11 @@ class Post(models.Model):
     image = models.ImageField(upload_to=upload_location, 
             null=True, 
             blank=True, 
-            width_field="width_field", 
-            height_field="height_field")
-    height_field = models.IntegerField(default=0)
-    width_field = models.IntegerField(default=0)
+            )
+    height_field = models.IntegerField(default=600)
+    width_field = models.IntegerField(default=800)
     content = models.TextField()
+    liked = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, related_name='liked')
     updated = models.DateTimeField(auto_now=True, auto_now_add=False)
     timestamp = models.DateTimeField(auto_now=False, auto_now_add=True)
 
@@ -46,10 +53,17 @@ class Post(models.Model):
         return self.title
 
     def __str__(self):
-        return self.title
+        return str(self.content)
 
     def get_absolute_url(self):
         return reverse("posts:detail", kwargs={"slug": self.slug})
+
+    def get_delete_url(self):
+        return reverse("posts:delete", kwargs={"slug": self.slug})
+
+
+    def get_update_url(self):
+        return reverse("posts:update", kwargs={"slug": self.slug})
 
     class Meta:
         ordering = ["-timestamp", "-updated"]

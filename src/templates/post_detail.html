@@ -5,44 +5,66 @@
 {{ instance.title }} | {{ block.super }}
 {% endblock head_title %}
 
+{% block script %}
+<script>
+
+     $(".comment-reply-btn").click(function(event){
+         event.preventDefault();
+        $(this).parent().next(".comment-reply").fadeToggle();
+    })
+  
+
+     $(".blog-liked").click(function(event){
+        var slug = $(this).attr("data-id");
+        var likedUrl = '/api/post/' + slug + "/like/";
+        $.ajax({
+          method:"GET",
+          url: likedUrl,
+          success: function(data){
+          if (data.liked){
+             $(".blog-liked").css("color", "#E74C3C");
+             $(".blog-liked").text(" Unlike (" + data.like_count + ")");
+          } else {
+             $(".blog-liked").css("color", "lightgrey");
+              $(".blog-liked").text(" Like (" + data.like_count + ")");
+          }
+         },
+         error: function(data){
+            console.log("error")
+            console.log(data)
+        }
+      })
+    })
+</script>
+
+{% endblock script %}
 
 
 {% block content %}
-<div class='col-sm-6 col-sm-offset-3'>
-   <div class='col-sm-3'>
+<div class = "row">
+<div class='col-sm-6 col-sm-offset-2'>
     <h3>{{ title }}</h3>
-    <p>by {{ user }}</p>
-   </div>
+    <p>by <a class = "auther" href="{{ autherUrl}}"> {{ auther }}</a> on {{ instance.timestamp }}</p>
     {% if instance.image %}
     <img src='{{ instance.image.url }}' class='img-responsive' />
     {% endif %}
-    <p>{{ instance.timestamp }}</p>
-
-
-<a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}">
-Facebook
-</a>
-
-<a href="https://twitter.com/home?status={{ share_string }}%20{{ request.build_absolute_uri }}">
-Twitter
-</a>
-
-<a href='https://plus.google.com/share?url={{ request.build_absolute_uri }}'>
-
-
-<a href="https://www.linkedin.com/shareArticle?mini=true&url={{ request.build_absolute_uri }}&title={{ instance.title }}&summary={{ share_string }}&source={{ request.build_absolute_uri }}">
-Linkedin
-</a>
-
-<a href="http://www.reddit.com/submit?url={{ request.build_absolute_uri }}&title={{ share_string }}.">Reddit</a>
+   <!--  <p>{{ instance.timestamp }}</p> -->
 
 
 
-{{ instance.content|linebreaks }}
-<br/>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Content</h3>
+  </div>
+  <div class="panel-body">
+    {{ instance.content|linebreaks }}
+  </div>
+</div>
+
+<br>
 <hr>
 
-  <div>
+<div>
 
         <p class='lead'>Comments</p>
         <blockquote>
@@ -77,8 +99,37 @@ Linkedin
 
         <hr/>
         {% endfor %}
-
 </div>
+</div>
+<div class='col-sm-4'>
+    {% if isliked %}
+      <span class="glyphicon glyphicon-heart blog-unlike" data-id="{{ slug }}"> Unlike ({{ liked_count }})</span>
+    {% else %}
+      <span class="glyphicon glyphicon-heart blog-liked" data-id="{{ slug }}"> Like ({{ liked_count }})</span>
+    {% endif %}
+    <hr>
+    <span class="glyphicon glyphicon-comment comment-texted"> Comment ({{ comment_count }})</span>
+    <hr>  
+<span>
+<a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}">
+<i class="fa fa-facebook-square fa-2x icons" aria-hidden="true"></i>
+</a>
 
+<a href="https://twitter.com/home?status={{ share_string }}%20{{ request.build_absolute_uri }}">
+<i class="fa fa-twitter-square fa-2x icons" aria-hidden="true"></i>
+</a>
+
+<a href='https://plus.google.com/share?url={{ request.build_absolute_uri }}'>
+
+
+<a href="https://www.linkedin.com/shareArticle?mini=true&url={{ request.build_absolute_uri }}&title={{ instance.title }}&summary={{ share_string }}&source={{ request.build_absolute_uri }}">
+<i class="fa fa-linkedin-square fa-2x icons" aria-hidden="true"></i>
+</a>
+
+<a href="http://www.reddit.com/submit?url={{ request.build_absolute_uri }}&title={{ share_string }}.">
+<i class="fa fa-reddit-square fa-2x icons" aria-hidden="true"></i></a>
+<span>
+<hr>
+</div>
 
 {% endblock content %}

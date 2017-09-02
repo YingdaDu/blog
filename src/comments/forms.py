@@ -10,3 +10,4 @@ class CommentForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super(CommentForm, self).__init__(*args, **kwargs)
         self.fields['content'].widget.attrs.update({'class' : 'myfieldclass'})
+
