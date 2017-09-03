@@ -25,8 +25,7 @@ SECRET_KEY = '8f+d*jok7v$swb9p0rf9g$ovg-vwrefl^1@nj49!k=^-u+w-l!'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["yingdablog.herokuapp.com"]
-
+ALLOWED_HOSTS = ["yingdablog.herokuapp.com", "www.yingdablogs.com"]
 
 # Application definition
 
